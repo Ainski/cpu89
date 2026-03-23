@@ -1,0 +1,11 @@
+# do run_cpu_tests.do
+# 0
+# ** Error: (vlog-7) Failed to open design unit file "./cpupip31real/cpupip31real.srcs/sources_1/ip/ram_8bit/dist_mem_gen_v8_0_10/simulation/dist_mem_gen_v8_0.v" in read mode.
+# 
+# No such file or directory. (errno = ENOENT)
+# ** Error: D:/modelism/win32pe/vlog failed.
+# Error in macro ./run_cpu_tests.do line 15
+# D:/modelism/win32pe/vlog failed.
+#     while executing
+# "vlog -work work -quiet ./cpupip31real/cpupip31real.srcs/sources_1/ip/ram_8bit/dist_mem_gen_v8_0_10/simulation/dist_mem_gen_v8_0.v"
+#  quit

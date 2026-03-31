@@ -1,7 +1,5 @@
 `timescale 1ns / 1ps
 `define ENDIAN 0//0 for little-endian 1 for big-endian
-//2021.4.4修复了大端小端的错误
-//2021.5.13重新恢复了大端模式
 module cpmem(
     input [3:0] data_type,
     input [31:0] exact_addr,

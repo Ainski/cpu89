@@ -1,4 +1,11 @@
 `timescale 1ns/1ps
+/*
+MEM 要求 ：
+sh sb sw 这三条指令仅仅修改对应单元的字节，例如：
+    初始存储器每个字为0xffffffff 对sh 0x1 1 
+    存储器当中前四个字节会变成
+    00 01 ff ff 而不会完成拓展 变成 00 01 00 00
+*/
 module PipeMEM(
     input i_DMEM_wena,
     input [3:0] i_data_type,

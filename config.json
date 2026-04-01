@@ -1,0 +1,14 @@
+{
+    "project_dir": "./piplineCPU",
+    "ip_files": [
+    ],
+    "verilog_files": [
+        "./piplineCPU/pipelineCPU.srcs/sources_1/new"
+    ],
+    "testbench_file": "./piplineCPU/pipelineCPU.srcs/sim_1/new/cpu_tb.v",
+    "testdata_dir": "./test_scripts/testdata",
+    "results_dir": "./test_scripts/results",
+    "imem_file_path": "./piplineCPU/pipelineCPU.srcs/sources_1/new/IMEM_top.v",
+    "imem_readmemh_line": 20,
+    "top_module": "test"
+}

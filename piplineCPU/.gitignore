@@ -1,0 +1,42 @@
+# Logs, reports, debug
+*.log
+*.jou
+*.rpt
+*.vdi
+*.debug
+*.str
+# Bitstreams and binaries
+*.bit
+*.bin
+*.mcs
+*.svf
+*.image
+# Netlists & simulation dumps
+*.edf
+*.edif
+*.vcd
+*.saif
+*.wdb
+# Vivado-generated directories
+vivado.cache/
+vivado.hw/
+vivado.ip_user_files/
+vivado.runs/
+vivado.sim/
+Xil/
+cache/
+# Checkpoints & hardware handoff files
+*.dcp
+*.hwdef
+# Temporary & backup files
+*.tmp
+*.backup.*
+hs_err_pid*
+# Ignore synthesis/implementation run outputs but keep utilization reports
+**/*.runs/synth*/*
+!**/*.runs/synth*/*utilization*.rpt
+**/*.runs/impl*/*
+!**/*.runs/impl*/*utilization*.rpt
+# IP and block design generated files (keep source .xci, .bd)
+**/bd/*/hdl/
+**/bd/*/ip/*/*

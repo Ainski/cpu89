@@ -1,0 +1,97 @@
+Reading D:/modelism/tcl/vsim/pref.tcl
+
+# 10.4c
+
+# do run_cpu_tests.do
+# ./piplineCPU
+# piplineCPU/pipelineCPU.srcs/sources_1/new/ADD.v piplineCPU/pipelineCPU.srcs/sources_1/new/ADD.v piplineCPU/pipelineCPU.srcs/sources_1/new/Asynchronous_D_FF.v piplineCPU/pipelineCPU.srcs/sources_1/new/Asynchronous_D_FF.v piplineCPU/pipelineCPU.srcs/sources_1/new/II.v piplineCPU/pipelineCPU.srcs/sources_1/new/II.v piplineCPU/pipelineCPU.srcs/sources_1/new/IMEM_top.v piplineCPU/pipelineCPU.srcs/sources_1/new/IMEM_top.v piplineCPU/pipelineCPU.srcs/sources_1/new/LLbit_reg.v piplineCPU/pipelineCPU.srcs/sources_1/new/LLbit_reg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeDEreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeDEreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeEMreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeEMreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeEXE.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeEXE.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeID.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeID.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeIF.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeIF.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeIR.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeIR.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeMEM.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeMEM.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeMWreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeMWreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeWB.v piplineCPU/pipelineCPU.srcs/sources_1/new/PipeWB.v piplineCPU/pipelineCPU.srcs/sources_1/new/alu.v piplineCPU/pipelineCPU.srcs/sources_1/new/alu.v piplineCPU/pipelineCPU.srcs/sources_1/new/clo.v piplineCPU/pipelineCPU.srcs/sources_1/new/clo.v piplineCPU/pipelineCPU.srcs/sources_1/new/clz.v piplineCPU/pipelineCPU.srcs/sources_1/new/clz.v piplineCPU/pipelineCPU.srcs/sources_1/new/complement.v piplineCPU/pipelineCPU.srcs/sources_1/new/complement.v piplineCPU/pipelineCPU.srcs/sources_1/new/cp0.v piplineCPU/pipelineCPU.srcs/sources_1/new/cp0.v piplineCPU/pipelineCPU.srcs/sources_1/new/cpmem.v 
+# piplineCPU/pipelineCPU.srcs/sources_1/new/cpmem.v piplineCPU/pipelineCPU.srcs/sources_1/new/cpu.v piplineCPU/pipelineCPU.srcs/sources_1/new/cpu.v piplineCPU/pipelineCPU.srcs/sources_1/new/cu.v piplineCPU/pipelineCPU.srcs/sources_1/new/cu.v piplineCPU/pipelineCPU.srcs/sources_1/new/decoder.v piplineCPU/pipelineCPU.srcs/sources_1/new/decoder.v piplineCPU/pipelineCPU.srcs/sources_1/new/direct.v piplineCPU/pipelineCPU.srcs/sources_1/new/direct.v piplineCPU/pipelineCPU.srcs/sources_1/new/div.v piplineCPU/pipelineCPU.srcs/sources_1/new/div.v piplineCPU/pipelineCPU.srcs/sources_1/new/divider.v piplineCPU/pipelineCPU.srcs/sources_1/new/divider.v piplineCPU/pipelineCPU.srcs/sources_1/new/extend.v piplineCPU/pipelineCPU.srcs/sources_1/new/extend.v piplineCPU/pipelineCPU.srcs/sources_1/new/hi_lo_function.v piplineCPU/pipelineCPU.srcs/sources_1/new/hi_lo_function.v piplineCPU/pipelineCPU.srcs/sources_1/new/memory.v piplineCPU/pipelineCPU.srcs/sources_1/new/memory.v piplineCPU/pipelineCPU.srcs/sources_1/new/mult.v piplineCPU/pipelineCPU.srcs/sources_1/new/mult.v piplineCPU/pipelineCPU.srcs/sources_1/new/mux.v piplineCPU/pipelineCPU.srcs/sources_1/new/mux.v piplineCPU/pipelineCPU.srcs/sources_1/new/npc.v piplineCPU/pipelineCPU.srcs/sources_1/new/npc.v piplineCPU/pipelineCPU.srcs/sources_1/new/pcreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/pcreg.v piplineCPU/pipelineCPU.srcs/sources_1/new/predictor.v piplineCPU/pipelineCPU.srcs/sources_1/new/predictor.v piplineCPU/pipelineCPU.srcs/sources_1/new/regfile.v piplineCPU/pipelineCPU.srcs/sources_1/new/regfile.v piplineCPU/pipelineCPU.srcs/sources_1/new/sccomp_dataflow.v piplineCPU/pipelineCPU.srcs/sources_1/new/sccomp_dataflow.v piplineCPU/pipelineCPU.srcs/sources_1/new/seg7x16.v piplineCPU/pipelineCPU.srcs/sources_1/new/seg7x16.v piplineCPU/pipelineCPU.srcs/sources_1/new/top.v piplineCPU/pipelineCPU.srcs/sources_1/new/top.v
+# ./piplineCPU/pipelineCPU.srcs/sim_1/new/cpu_tb.v
+# ./test_scripts/testdata
+# ./test_scripts/results
+# ./piplineCPU/pipelineCPU.srcs/sources_1/new/IMEM_top.v
+# 20
+# test
+# 0
+# test_scripts/testdata/101_swlwbnebeq.hex.txt test_scripts/testdata/102_regconflict.hex.txt test_scripts/testdata/103_regconflict_detected_2.hex.txt test_scripts/testdata/104_pizza_tower_test.hex.txt test_scripts/testdata/10_and.hex.txt test_scripts/testdata/11_beq.hex.txt test_scripts/testdata/12_bne.hex.txt test_scripts/testdata/13_j.hex.txt test_scripts/testdata/14_jal.hex.txt test_scripts/testdata/15_jr.hex.txt test_scripts/testdata/16.26_lwsw.hex.txt test_scripts/testdata/16.26_lwsw2.hex.txt test_scripts/testdata/17_xor.hex.txt test_scripts/testdata/18_nor.hex.txt test_scripts/testdata/19_or.hex.txt test_scripts/testdata/1_addi.hex.txt test_scripts/testdata/20_sll.hex.txt test_scripts/testdata/21_sllv.hex.txt test_scripts/testdata/22_sltu.hex.txt test_scripts/testdata/23_sra.hex.txt test_scripts/testdata/24_srl.hex.txt test_scripts/testdata/25_subu.hex.txt test_scripts/testdata/27_add.hex.txt test_scripts/testdata/28_sub.hex.txt test_scripts/testdata/29_slt.hex.txt test_scripts/testdata/2_addiu.hex.txt test_scripts/testdata/30_srlv.hex.txt test_scripts/testdata/31_srav.hex.txt test_scripts/testdata/32_clz.hex.txt test_scripts/testdata/33_divu.hex.txt test_scripts/testdata/35_jalr.hex.txt test_scripts/testdata/36.39_lbsb.hex.txt test_scripts/testdata/36.39_lbsb2.hex.txt test_scripts/testdata/37_lbu.hex.txt test_scripts/testdata/37_lbu2.hex.txt test_scripts/testdata/38_lhu.hex.txt test_scripts/testdata/38_lhu2.hex.txt test_scripts/testdata/3_andi.hex.txt test_scripts/testdata/40.41_lhsh.hex.txt test_scripts/testdata/40.41_lhsh2.hex.txt test_scripts/testdata/42.45_mfc0mtc0.hex.txt test_scripts/testdata/43.46_mfhi.mthi.hex.txt test_scripts/testdata/44.47_mflo.mtlo.hex.txt test_scripts/testdata/48_mult.hex.txt test_scripts/testdata/49_multu.hex.txt test_scripts/testdata/4_ori.hex.txt test_scripts/testdata/52_bgez.hex.txt test_scripts/testdata/54_div.hex.txt test_scripts/testdata/55_cp0.hex.txt test_scripts/testdata/5_sltiu.hex.txt test_scripts/testdata/6_lui.hex.txt test_scripts/testdata/7_xori.hex.txt 
+# test_scripts/testdata/8_slti.hex.txt test_scripts/testdata/9_addu.hex.txt
+Found 54 test files to run:
+  - test_scripts/testdata/101_swlwbnebeq.hex.txt
+  - test_scripts/testdata/102_regconflict.hex.txt
+  - test_scripts/testdata/103_regconflict_detected_2.hex.txt
+  - test_scripts/testdata/104_pizza_tower_test.hex.txt
+  - test_scripts/testdata/10_and.hex.txt
+  - test_scripts/testdata/11_beq.hex.txt
+  - test_scripts/testdata/12_bne.hex.txt
+  - test_scripts/testdata/13_j.hex.txt
+  - test_scripts/testdata/14_jal.hex.txt
+  - test_scripts/testdata/15_jr.hex.txt
+  - test_scripts/testdata/16.26_lwsw.hex.txt
+  - test_scripts/testdata/16.26_lwsw2.hex.txt
+  - test_scripts/testdata/17_xor.hex.txt
+  - test_scripts/testdata/18_nor.hex.txt
+  - test_scripts/testdata/19_or.hex.txt
+  - test_scripts/testdata/1_addi.hex.txt
+  - test_scripts/testdata/20_sll.hex.txt
+  - test_scripts/testdata/21_sllv.hex.txt
+  - test_scripts/testdata/22_sltu.hex.txt
+  - test_scripts/testdata/23_sra.hex.txt
+  - test_scripts/testdata/24_srl.hex.txt
+  - test_scripts/testdata/25_subu.hex.txt
+  - test_scripts/testdata/27_add.hex.txt
+  - test_scripts/testdata/28_sub.hex.txt
+  - test_scripts/testdata/29_slt.hex.txt
+  - test_scripts/testdata/2_addiu.hex.txt
+  - test_scripts/testdata/30_srlv.hex.txt
+  - test_scripts/testdata/31_srav.hex.txt
+  - test_scripts/testdata/32_clz.hex.txt
+  - test_scripts/testdata/33_divu.hex.txt
+  - test_scripts/testdata/35_jalr.hex.txt
+  - test_scripts/testdata/36.39_lbsb.hex.txt
+  - test_scripts/testdata/36.39_lbsb2.hex.txt
+  - test_scripts/testdata/37_lbu.hex.txt
+  - test_scripts/testdata/37_lbu2.hex.txt
+  - test_scripts/testdata/38_lhu.hex.txt
+  - test_scripts/testdata/38_lhu2.hex.txt
+  - test_scripts/testdata/3_andi.hex.txt
+  - test_scripts/testdata/40.41_lhsh.hex.txt
+  - test_scripts/testdata/40.41_lhsh2.hex.txt
+  - test_scripts/testdata/42.45_mfc0mtc0.hex.txt
+  - test_scripts/testdata/43.46_mfhi.mthi.hex.txt
+  - test_scripts/testdata/44.47_mflo.mtlo.hex.txt
+  - test_scripts/testdata/48_mult.hex.txt
+  - test_scripts/testdata/49_multu.hex.txt
+  - test_scripts/testdata/4_ori.hex.txt
+  - test_scripts/testdata/52_bgez.hex.txt
+  - test_scripts/testdata/54_div.hex.txt
+  - test_scripts/testdata/55_cp0.hex.txt
+  - test_scripts/testdata/5_sltiu.hex.txt
+  - test_scripts/testdata/6_lui.hex.txt
+  - test_scripts/testdata/7_xori.hex.txt
+  - test_scripts/testdata/8_slti.hex.txt
+  - test_scripts/testdata/9_addu.hex.txt
+
+# 54
+# 0
+Starting batch simulation for 54 tests...
+
+-----------------------------
+RUNNING TEST: test_scripts/testdata/101_swlwbnebeq.hex.txt
+-----------------------------
+# ** Error: can't read "readmemh("E:/Homeworks/ComputerSytemExperiement/cpu89/test_scripts/testdata/101_swlwbnebeq.hex.txt", IMEMreg)": no such variable
+# Error in macro ./run_cpu_tests.do line 231
+# can't read "readmemh("E:/Homeworks/ComputerSytemExperiement/cpu89/test_scripts/testdata/101_swlwbnebeq.hex.txt", IMEMreg)": no such variable
+#     while executing
+# "append new_lines "        \\$readmemh(\"$test_file_abs\", IMEMreg);""
+#     (procedure "run_single_test" line 40)
+#     invoked from within
+# "run_single_test $test_file $results_dir"
+#     ("foreach" body line 2)
+#     invoked from within
+# "foreach test_file $test_files {
+#     set result [run_single_test $test_file $results_dir]
+#     if {$result == 1} {
+#         incr pass_count
+#     }
+# }"
+#  quit

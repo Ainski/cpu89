@@ -1,0 +1,10 @@
+
+work/
+
+test_scripts/results/
+
+run.sh
+
+run.bat
+
+run_cpu_tests.do

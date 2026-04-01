@@ -8,3 +8,5 @@ run.sh
 run.bat
 
 run_cpu_tests.do
+
+log/

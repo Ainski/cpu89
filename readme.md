@@ -1,7 +1,6 @@
 ---
 author: ainski
 time: 2025-12-10
-teacher: qgf
 ---
 
 # 流水线 CPU 设计项目
@@ -19,9 +18,14 @@ teacher: qgf
 - 小端模式
 
 ## 运行集成化测试
+项目需要的依赖：
+- modelsim PE 10.4c 要求配置好vsim环境变量
+- python3.13.1 pyqt5
+- txt_compare 必须是沈坚老师的程序ver 1.0.0
+- vivado 2020.1
 
 ```bash
-vsim -c -do "do run_cpu_tests.do; quit" > log
+python script_generator.py --gui
 ```
 
 ## 项目架构

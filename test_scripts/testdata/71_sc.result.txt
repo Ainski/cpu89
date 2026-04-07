@@ -14,8 +14,8 @@ regfile12: 00000001
 regfile13: 00000001
 regfile14: 7fffffff
 regfile15: 00000001
-regfile16: 80000000
-regfile17: ffffffff
+regfile16: 7fffffff
+regfile17: 00000000
 regfile18: 00000000
 regfile19: 00000000
 regfile20: 00000000

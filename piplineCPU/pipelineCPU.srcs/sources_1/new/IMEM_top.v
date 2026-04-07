@@ -17,7 +17,8 @@ module IMEM_top(
     assign spo = IMEMreg[a];  // Address directly maps to memory location
 
     initial begin
-        $readmemh("E:/Homeworks/ComputerSytemExperiement/cpu89/test_scripts/testdata/48_mult.hex.txt", IMEMreg);        //$readmemh("E:/Homeworks/cpu31real/testdata/8_slti.hex.txt", IMEMreg);
+        $readmemh("E:/Homeworks/ComputerSytemExperiement/cpu89/test_scripts/testdata/71_sc.hex.txt", IMEMreg);        //$readmemh("E:/Homeworks/cpu31real/testdata/7_xori.hex.txt", IMEMreg);
+        //$readmemh("E:/Homeworks/cpu31real/testdata/8_slti.hex.txt", IMEMreg);
         //$readmemh("E:/Homeworks/cpu31real/testdata/9_addu.hex.txt", IMEMreg);
         //$readmemh("E:/Homeworks/cpu31real/testdata/10_and.hex.txt", IMEMreg);
         //$readmemh("E:/Homeworks/cpu31real/testdata/11_beq.hex.txt", IMEMreg);
@@ -67,7 +68,6 @@ module IMEM_top(
     end
 
 endmodule
-
 
 
 

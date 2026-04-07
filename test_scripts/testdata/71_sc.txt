@@ -5,6 +5,7 @@ addi $0,$0,0x0000
 # sc test: store conditional word
 lui $1,0x1001
 ori $1,$1,0x0000
+sw $0,0($1)
 addi $2,$0,0x5678
 ll $3,0($1)
 addi $3,$3,0x0001
@@ -41,7 +42,7 @@ lui $14,0x7FFF
 ori $14,$14,0xFFFF
 sw $14,16($1)
 ll $15,16($1)
-addi $15,$15,0x0001
+ori $15,$15,0x0001
 sc $15,16($1)
 lw $16,16($1)
 

@@ -137,6 +137,9 @@ module cpu(
     wire oID_branch_predict;
     wire [3:0] oID_branch_flag;
     wire [31:0] oID_branch_fail_pc;
+    wire o_ID_ll_enable;
+    wire o_ID_sc_enable;
+    wire o_ID_cp0_exception;
     PipeID ID(
         .clk(clk),
         .rst(rst),
@@ -206,7 +209,9 @@ module cpu(
         .o_branch_predict(oID_branch_predict),
         .o_branch_flag(oID_branch_flag),
         .o_branch_fail_pc(oID_branch_fail_pc),
-        
+        .o_ll_enable(o_ID_ll_enable),
+        .o_sc_enable(o_ID_sc_enable),
+        .cp0_exception(o_ID_cp0_exception),
         .count(count),
         .compare(compare),
         .halt(oID_halt)
@@ -241,9 +246,13 @@ module cpu(
     wire [3:0] iEXE_branch_flag;
     wire [31:0] oDEreg_branch_fail_pc;
     wire iDEreg_branch_predict_fail;
+    wire iEXE_ll_enable;
+    wire iEXE_sc_enable;
     PipeDEreg DEreg(
         .clk(clk),
         .rst(rst),
+        .ll_enable(o_ID_ll_enable),
+        .sc_enable(o_ID_sc_enable),
         .DMEM_wena(oID_DMEM_wena),
         .data_type(oID_data_type),
         .CBW_sign(oID_CBW_sign),
@@ -303,6 +312,8 @@ module cpu(
         .D_branch_predict(iEXE_branch_predict),
         .D_branch_flag(iEXE_branch_flag),
         .D_branch_fail_pc(oDEreg_branch_fail_pc),
+        .D_ll_enable(iEXE_ll_enable),
+        .D_sc_enable(iEXE_sc_enable),
         .halt(oID_halt)
     );
     wire oEXE_rf_wena;
@@ -357,6 +368,8 @@ module cpu(
     wire [31:0] iMEM_exe_out;
     wire [31:0] oEMreg_hi_idata;
     wire [31:0] oEMreg_lo_idata;
+    wire oEMreg_ll_enable;
+    wire oEMreg_sc_enable;
     PipeEMreg EMreg(
         .clk(clk),
         .rst(rst),
@@ -374,6 +387,8 @@ module cpu(
         .lo_idata(oEXE_lo_idata),
         .alu_out(oEXE_alu_out),
         .exe_out(oEXE_exe_out),
+        .ll_enable(iEXE_ll_enable),
+        .sc_enable(iEXE_sc_enable),
         .D_DMEM_wena(iMEM_DMEM_wena),
         .D_data_type(iMEM_data_type),
         .D_CBW_sign(iMEM_CBW_sign),
@@ -387,7 +402,9 @@ module cpu(
         .D_lo_ena(oEMreg_lo_ena),
         .D_lo_idata(oEMreg_lo_idata),
         .D_alu_out(iMEM_alu_out),
-        .D_exe_out(iMEM_exe_out)
+        .D_exe_out(iMEM_exe_out),
+        .D_ll_enable(oEMreg_ll_enable),
+        .D_sc_enable(oEMreg_sc_enable)
     );
     wire [31:0] iMEM_DMEM_rdata;
     wire [31:0] oMEM_exe_out;
@@ -396,6 +413,9 @@ module cpu(
     wire [31:0] oMEM_DMEM_rdata;
     wire [31:0] oMEM_DMEM_wdata;
     PipeMEM MEM(
+        .clk(clk),
+        .rst(rst),
+        .flush_LLbit(o_ID_cp0_exception),
         .i_DMEM_wena(iMEM_DMEM_wena),
         .i_data_type(iMEM_data_type),
         .i_CBW_sign(iMEM_CBW_sign),
@@ -404,6 +424,8 @@ module cpu(
         .i_alu_out(iMEM_alu_out),
         .i_exe_out(iMEM_exe_out),
         .i_DMEM_rdata(iMEM_DMEM_rdata),
+        .ll_enable(oEMreg_ll_enable),
+        .sc_enable(oEMreg_sc_enable),
         .o_exe_out(oMEM_exe_out),
         .o_DMEM_wena(oMEM_DMEM_wena),
         .o_DMEM_addr(oMEM_DMEM_addr),

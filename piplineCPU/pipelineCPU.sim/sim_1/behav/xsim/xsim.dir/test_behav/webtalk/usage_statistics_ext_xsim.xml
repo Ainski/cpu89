@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<webTalkData  fileName='usage_statistics_ext_xsim.xml'  majorVersion='1' minorVersion='0' timeStamp='Mon Apr  6 19:53:20 2026'>
+<webTalkData  fileName='usage_statistics_ext_xsim.xml'  majorVersion='1' minorVersion='0' timeStamp='Tue Apr  7 20:02:04 2026'>
 <section name="__ROOT__" level="0" order="1" description="">
  <section name="software_version_and_target_device" level="1" order="1" description="">
   <keyValuePair key="beta" value="FALSE" description="" />
   <keyValuePair key="build_version" value="3064766" description="" />
-  <keyValuePair key="date_generated" value="Mon Apr  6 19:53:17 2026" description="" />
+  <keyValuePair key="date_generated" value="Tue Apr  7 20:02:02 2026" description="" />
   <keyValuePair key="os_platform" value="WIN64" description="" />
   <keyValuePair key="product_version" value="XSIM v2020.2 (64-bit)" description="" />
   <keyValuePair key="project_id" value="45e9c9673c7c4019ae8ad7dc3c0db9d1" description="" />
-  <keyValuePair key="project_iteration" value="92" description="" />
+  <keyValuePair key="project_iteration" value="156" description="" />
   <keyValuePair key="random_id" value="8c438f13-35f5-4959-8259-ca45acdcf31b" description="" />
   <keyValuePair key="registration_id" value="8c438f13-35f5-4959-8259-ca45acdcf31b" description="" />
   <keyValuePair key="route_design" value="FALSE" description="" />
@@ -40,13 +40,13 @@
    <keyValuePair key="vhdl2008" value="false" description="" />
   </section>
   <section name="usage" level="2" order="2" description="">
-   <keyValuePair key="compiler_memory" value="186120_KB" description="" />
-   <keyValuePair key="compiler_time" value="2.75_sec" description="" />
+   <keyValuePair key="compiler_memory" value="183980_KB" description="" />
+   <keyValuePair key="compiler_time" value="2.39_sec" description="" />
    <keyValuePair key="simulation_image_code" value="1263 KB" description="" />
-   <keyValuePair key="simulation_image_data" value="65 KB" description="" />
+   <keyValuePair key="simulation_image_data" value="64 KB" description="" />
    <keyValuePair key="total_instances" value="118" description="" />
    <keyValuePair key="total_nets" value="0" description="" />
-   <keyValuePair key="total_processes" value="1050" description="" />
+   <keyValuePair key="total_processes" value="1054" description="" />
    <keyValuePair key="xilinx_hdl_libraries_used" value="secureip unimacro_ver unisims_ver " description="" />
   </section>
  </section>

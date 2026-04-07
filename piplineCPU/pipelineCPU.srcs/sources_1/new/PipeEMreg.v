@@ -16,6 +16,8 @@ module PipeEMreg(
     input [31:0] lo_idata,
     input [31:0] alu_out,
     input [31:0] exe_out,
+    input ll_enable,
+    input sc_enable,
     output reg D_DMEM_wena,
     output reg [3:0] D_data_type, 
     output reg D_CBW_sign,
@@ -29,7 +31,9 @@ module PipeEMreg(
     output reg D_lo_ena,
     output reg [31:0] D_lo_idata,
     output reg [31:0] D_alu_out,
-    output reg [31:0] D_exe_out
+    output reg [31:0] D_exe_out,
+    output reg D_ll_enable,
+    output reg D_sc_enable
 );
     always@(posedge clk or posedge rst)
     begin
@@ -49,6 +53,8 @@ module PipeEMreg(
             D_lo_idata<=32'bz;
             D_alu_out<=32'bz;
             D_exe_out<=32'bz;
+            D_ll_enable<=0;
+            D_sc_enable<=0;
         end
         else
         begin
@@ -66,6 +72,8 @@ module PipeEMreg(
             D_lo_idata<=lo_idata;
             D_alu_out<=alu_out;
             D_exe_out<=exe_out;
+            D_ll_enable <= ll_enable;
+            D_sc_enable <= sc_enable;
         end
     end
 endmodule

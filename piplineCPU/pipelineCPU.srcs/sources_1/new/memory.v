@@ -11,7 +11,7 @@ module memory(
     wire [31:0] d59;
     wire [31:0] e59;
     reg [31:0] regfiles [0:511];
-    assign rdata = regfiles[addr[7:0]];
+    assign rdata = regfiles[addr[10:2]];
     assign d59=regfiles[239];
     assign e59=regfiles[299];
     assign answer=regfiles[0];
@@ -19,7 +19,7 @@ module memory(
     begin
         if(ena&&wena)
         begin
-            regfiles[addr[7:0]] <= wdata;
+            regfiles[addr[10:2]] <= wdata;
         end
     end
 endmodule

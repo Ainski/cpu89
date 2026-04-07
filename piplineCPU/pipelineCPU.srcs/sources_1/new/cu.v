@@ -17,7 +17,6 @@ module cu(
     input [31:0] cp0_exec_addr,
     input [5:0] cp0_int_i, 
     input [31:0] cp0_status,
-    input LLbit_odata,
     output reg DMEM_wena,
     output reg [3:0] data_type,
     output reg CBW_sign,
@@ -47,8 +46,8 @@ module cu(
     output branch_predict,
     output reg [3:0] branch_flag,
     output reg [31:0] branch_fail_pc,
-    output reg LLbit_idata,
-    output reg LLbit_wena
+    output ll_enable,
+    output sc_enable
 );
     wire [31:0] ext16;
     //assign branch_predict=0;
@@ -81,6 +80,10 @@ module cu(
     assign eret=(INST==ERET);
     assign branch_inst=(INST==BEQ)|(INST==BNE)|(INST==BGEZ)|(INST>=BGEZAL&&INST<=BLTZAL);
     assign ext16={{16{immediate[15]}},immediate};
+    assign ll_enable = (INST == LL);
+    
+    assign sc_enable = (INST == SC);
+
     always@(*)
     begin
         //if(cp0_int_i[0]&&cp0_status[0]&~cp0_status[1]&cp0_status[10])//timer_int
@@ -110,8 +113,8 @@ module cu(
             blockade<=1;
             branch_flag<=branch_NONE;
             branch_fail_pc<=32'bz;
-            LLbit_idata<=1'bz;
-            LLbit_wena<=0;
+            //LLbit_idata<=1'bz;
+            //LLbit_wena<=0;
         end
         else
         begin
@@ -142,8 +145,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#2
             ADDU:begin
@@ -171,8 +174,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#3
             SUB:begin
@@ -200,8 +203,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#4
             SUBU:begin
@@ -229,8 +232,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#5
             AND:begin
@@ -258,8 +261,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#6
             OR:begin
@@ -287,8 +290,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#7
             XOR:begin
@@ -316,8 +319,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#8
             NOR:begin
@@ -345,8 +348,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#9
             SLT:begin
@@ -374,8 +377,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#10
             SLTU:begin
@@ -403,8 +406,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#11
             SLL:begin
@@ -432,8 +435,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#12
             SRL:begin
@@ -461,8 +464,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#13
             SRA:begin
@@ -490,8 +493,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#14
             SLLV:begin
@@ -519,8 +522,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#15
             SRLV:begin
@@ -548,8 +551,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#16
             SRAV:begin
@@ -577,8 +580,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#17
             JR:begin
@@ -606,8 +609,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#18
             ADDI:begin
@@ -635,8 +638,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#19
             ADDIU:begin
@@ -664,8 +667,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#20
             ANDI:begin
@@ -693,8 +696,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#21
             ORI:begin
@@ -722,8 +725,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#22
             XORI:begin
@@ -751,8 +754,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#23
             LW:begin
@@ -780,8 +783,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#24
             SW:begin
@@ -809,8 +812,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#25
             BEQ:begin
@@ -840,8 +843,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BEQ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -868,8 +871,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BEQ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#26
@@ -900,8 +903,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BNE;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -928,8 +931,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BNE;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#27
@@ -958,8 +961,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#28
             SLTIU:begin
@@ -987,8 +990,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#29
             LUI:begin
@@ -1016,8 +1019,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#30
             J:begin
@@ -1045,8 +1048,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#31
             JAL:begin
@@ -1074,8 +1077,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#32
             DIV:begin
@@ -1103,8 +1106,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#33
             DIVU:begin
@@ -1132,8 +1135,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#34
             MULT:begin
@@ -1161,8 +1164,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#35
             MULTU:begin
@@ -1190,8 +1193,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#36
             BGEZ:begin
@@ -1221,8 +1224,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BGEZ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -1249,8 +1252,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BGEZ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end        
             //#37
@@ -1279,8 +1282,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#38
             LBU:begin
@@ -1308,8 +1311,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#39
             LHU:begin
@@ -1337,8 +1340,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#40
             LB:begin
@@ -1366,8 +1369,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#41
             LH:begin
@@ -1395,8 +1398,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#42
             SB:begin
@@ -1424,8 +1427,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#43
             SH:begin
@@ -1453,8 +1456,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#44
             BREAK:begin
@@ -1482,8 +1485,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#45
             SYSCALL:begin
@@ -1511,8 +1514,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //$46
             ERET:begin
@@ -1540,8 +1543,8 @@ module cu(
                 blockade<=1;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#47
             MFHI:begin
@@ -1569,8 +1572,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#48
             MFLO:begin
@@ -1598,8 +1601,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#49
             MTHI:begin
@@ -1627,8 +1630,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#50
             MTLO:begin
@@ -1656,8 +1659,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#51
             MFC0:begin
@@ -1685,8 +1688,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#52
             MTC0:begin
@@ -1714,8 +1717,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#53
             CLZ:begin
@@ -1743,8 +1746,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#54
             TEQ:begin
@@ -1774,8 +1777,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -1803,8 +1806,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#55
@@ -1833,8 +1836,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#56
             MOVN:begin
@@ -1862,8 +1865,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#57
             MOVZ:begin
@@ -1891,8 +1894,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#58
             CLO:begin
@@ -1920,8 +1923,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#59
             MADD:begin
@@ -1949,8 +1952,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#60
             MADDU:begin
@@ -1978,8 +1981,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#61
             MSUB:begin
@@ -2007,8 +2010,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#62
             MSUBU:begin
@@ -2036,8 +2039,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#63
             BGTZ:begin
@@ -2067,8 +2070,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BGTZ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2095,8 +2098,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BGTZ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#64
@@ -2127,8 +2130,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BLEZ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2155,8 +2158,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BLEZ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#65
@@ -2187,8 +2190,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BLTZ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2215,8 +2218,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BLTZ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#66
@@ -2247,8 +2250,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BLTZ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2275,8 +2278,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BLTZ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#67
@@ -2307,8 +2310,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_BGEZ;
                     branch_fail_pc<=pc4;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2335,8 +2338,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_BGEZ;
                     branch_fail_pc<=ext18;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#68
@@ -2365,8 +2368,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end 
             //#69
             LWR:begin
@@ -2394,8 +2397,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end      
             //#70
             SWL:begin
@@ -2423,8 +2426,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end 
             //#71
             SWR:begin
@@ -2452,8 +2455,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
             //#72
             LL:begin
@@ -2481,69 +2484,99 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'b1;
-                LLbit_wena<=1;
+                //LLbit_idata<=1'b1;
+                //LLbit_wena<=1;
             end
-            //#73
+            // //#73
+            // SC:begin
+			// 	exception<=0;
+            //     if(LLbit_odata)
+            //     begin
+            //         DMEM_wena<=1;
+            //         data_type<=Wdata;
+            //         CBW_sign<=1;
+            //         CHW_sign<=1; 
+            //         mux_pc<=mux_pc_NPC;
+            //         mux_rf<=mux_rf_O;
+            //         mux_rf_DMEM<=0;
+            //         mux_alu<=mux_alu_Rs_EXT16;
+            //         mux_hi<=8'bz;
+            //         mux_lo<=8'bz;
+            //         rf_wena<=1;
+            //         mov_cond<=mov_cond_NONE;
+            //         rf_waddr<=rt;
+            //         alu_aluc<=4'b0010;
+            //         hi_ena<=0;
+            //         lo_ena<=0;
+            //         hi_lo_func<=hi_lo_func_NONE;
+            //         EXT1_n_c<=1'bz;
+            //         EXT16_sign<=1;
+            //         cause<=5'bz;
+            //         blockade<=0;
+            //         branch_flag<=branch_NONE;
+            //         branch_fail_pc<=32'bz;
+            //         //LLbit_idata<=1'bz;
+            //         //LLbit_wena<=0;
+            //     end
+            //     else
+            //     begin
+            //         DMEM_wena<=0;
+            //         data_type<=4'bz;
+            //         CBW_sign<=1'bz;
+            //         CHW_sign<=1'bz; 
+            //         mux_pc<=mux_pc_NPC;
+            //         mux_rf<=mux_rf_Z;
+            //         mux_rf_DMEM<=0;
+            //         mux_alu<=8'bz;
+            //         mux_hi<=8'bz;
+            //         mux_lo<=8'bz;
+            //         rf_wena<=1;
+            //         mov_cond<=mov_cond_NONE;
+            //         rf_waddr<=rt;
+            //         alu_aluc<=4'bz;
+            //         hi_ena<=0;
+            //         lo_ena<=0;
+            //         hi_lo_func<=hi_lo_func_NONE;
+            //         EXT1_n_c<=1'bz;
+            //         EXT16_sign<=1'bz;
+            //         cause<=5'bz;
+            //         blockade<=0;
+            //         branch_flag<=branch_NONE;
+            //         branch_fail_pc<=32'bz;
+            //         //LLbit_idata<=1'bz;
+            //         //LLbit_wena<=0;
+            //     end
+            // end
             SC:begin
 				exception<=0;
-                if(LLbit_odata)
-                begin
-                    DMEM_wena<=1;
-                    data_type<=Wdata;
-                    CBW_sign<=1;
-                    CHW_sign<=1; 
-                    mux_pc<=mux_pc_NPC;
-                    mux_rf<=mux_rf_O;
-                    mux_rf_DMEM<=0;
-                    mux_alu<=mux_alu_Rs_EXT16;
-                    mux_hi<=8'bz;
-                    mux_lo<=8'bz;
-                    rf_wena<=1;
-                    mov_cond<=mov_cond_NONE;
-                    rf_waddr<=rt;
-                    alu_aluc<=4'b0010;
-                    hi_ena<=0;
-                    lo_ena<=0;
-                    hi_lo_func<=hi_lo_func_NONE;
-                    EXT1_n_c<=1'bz;
-                    EXT16_sign<=1;
-                    cause<=5'bz;
-                    blockade<=0;
-                    branch_flag<=branch_NONE;
-                    branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
-                end
-                else
-                begin
-                    DMEM_wena<=0;
-                    data_type<=4'bz;
-                    CBW_sign<=1'bz;
-                    CHW_sign<=1'bz; 
-                    mux_pc<=mux_pc_NPC;
-                    mux_rf<=mux_rf_Z;
-                    mux_rf_DMEM<=0;
-                    mux_alu<=8'bz;
-                    mux_hi<=8'bz;
-                    mux_lo<=8'bz;
-                    rf_wena<=1;
-                    mov_cond<=mov_cond_NONE;
-                    rf_waddr<=rt;
-                    alu_aluc<=4'bz;
-                    hi_ena<=0;
-                    lo_ena<=0;
-                    hi_lo_func<=hi_lo_func_NONE;
-                    EXT1_n_c<=1'bz;
-                    EXT16_sign<=1'bz;
-                    cause<=5'bz;
-                    blockade<=0;
-                    branch_flag<=branch_NONE;
-                    branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
-                end
+                DMEM_wena<=1;
+                data_type<=Wdata;
+                CBW_sign<=1;
+                CHW_sign<=1; 
+                mux_pc<=mux_pc_NPC;
+                mux_rf<=mux_rf_O;
+                mux_rf_DMEM<=1;
+                mux_alu<=mux_alu_Rs_EXT16;
+                mux_hi<=8'bz;
+                mux_lo<=8'bz;
+                rf_wena<=1;
+                mov_cond<=mov_cond_NONE;
+                rf_waddr<=rt;
+                alu_aluc<=4'b0010;
+                hi_ena<=0;
+                lo_ena<=0;
+                hi_lo_func<=hi_lo_func_NONE;
+                EXT1_n_c<=1'bz;
+                EXT16_sign<=1;
+                cause<=5'bz;
+                blockade<=0;
+                branch_flag<=branch_NONE;
+                branch_fail_pc<=32'bz;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
+
             end
+            
             //#74
             TGE:begin
                 if((rf_rdata1[31]==rf_rdata2[31]&&rf_rdata1>=rf_rdata2)||(rf_rdata1[31]==0&&rf_rdata2[31]==1))
@@ -2572,8 +2605,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2601,8 +2634,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#75
@@ -2633,8 +2666,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2662,8 +2695,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#76
@@ -2694,8 +2727,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2723,8 +2756,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#77
@@ -2755,8 +2788,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2784,8 +2817,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#78
@@ -2816,8 +2849,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2845,8 +2878,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#79
@@ -2877,8 +2910,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2906,8 +2939,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#80
@@ -2938,8 +2971,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -2967,8 +3000,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#81
@@ -2999,8 +3032,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -3028,8 +3061,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#82
@@ -3060,8 +3093,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -3089,8 +3122,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#83
@@ -3121,8 +3154,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -3150,8 +3183,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             //#84
@@ -3182,8 +3215,8 @@ module cu(
                     blockade<=1;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
                 else
                 begin
@@ -3211,8 +3244,8 @@ module cu(
                     blockade<=0;
                     branch_flag<=branch_NONE;
                     branch_fail_pc<=32'bz;
-                    LLbit_idata<=1'bz;
-                    LLbit_wena<=0;
+                    //LLbit_idata<=1'bz;
+                    //LLbit_wena<=0;
                 end
             end
             default:
@@ -3241,8 +3274,8 @@ module cu(
                 blockade<=0;
                 branch_flag<=branch_NONE;
                 branch_fail_pc<=32'bz;
-                LLbit_idata<=1'bz;
-                LLbit_wena<=0;
+                //LLbit_idata<=1'bz;
+                //LLbit_wena<=0;
             end
         endcase
         end

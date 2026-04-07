@@ -38,7 +38,7 @@ module sccomp_dataflow(
     );
     //memory IMEM (clk_in,IM_ena,IM_w,(pc-32'h00400000)/4,IM_wdata,inst);
     IMEM_top IMEM(pc[13:2],inst);
-    memory DMEM (clk_in,DM_ena,DM_w,(addr-32'h10010000)/4,wdata,rdata,answer);
+    memory DMEM (clk_in,DM_ena,DM_w,(addr-32'h10010000),wdata,rdata,answer);
     //DMEM DMEM(addr[12:2],wdata,clk_in,DM_w,rdata);
     assign IM_wdata = 32'b0;
     assign int_i={5'b0,timer_int};

@@ -35,7 +35,7 @@ module direct(
     output reg [31:0] o_lo_odata,
     output stall
 );
-    // 未完成对于mfc0 mft0 的数据重定向工作
+    
     reg rs_stall;
     reg rt_stall;
     always@(*)

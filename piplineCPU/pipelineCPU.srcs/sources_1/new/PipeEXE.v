@@ -173,8 +173,10 @@ module PipeEXE(
                     branch_predict_fail<=(!branch_predict&&~rf_rdata1[31])||(branch_predict&&rf_rdata1[31]);
                 end
                 branch_BGTZ:begin
-                    branch_predict_success<=(branch_predict&&(~rf_rdata1[31]&&rf_rdata1!=32'b0))||(!branch_predict&&(rf_rdata1[31]||rf_rdata1==32'b0));
-                    branch_predict_fail<=(!branch_predict&&(~rf_rdata1[31]&&rf_rdata1!=32'b0))||(branch_predict&&(rf_rdata1[31]||rf_rdata1==32'b0));
+                    branch_predict_success<= 
+                        (branch_predict&&(~rf_rdata1[31]&&rf_rdata1!=32'b0))||(!branch_predict&&(rf_rdata1[31]||rf_rdata1==32'b0));
+                    branch_predict_fail<=
+                        (!branch_predict&&(~rf_rdata1[31]&&rf_rdata1!=32'b0))||(branch_predict&&(rf_rdata1[31]||rf_rdata1==32'b0));
                 end
                 branch_BLEZ:begin
                     branch_predict_success<=(branch_predict&&(rf_rdata1[31]||rf_rdata1==32'b0))||(!branch_predict&&(~rf_rdata1[31]&&rf_rdata1!=32'b0));

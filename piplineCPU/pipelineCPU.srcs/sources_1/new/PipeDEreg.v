@@ -32,6 +32,8 @@ module PipeDEreg(
     input [3:0] branch_flag,
     input [31:0] branch_fail_pc,
     input blockade,
+    input ll_enable,
+    input sc_enable,
     input halt,
     output reg D_DMEM_wena,
     output reg [3:0] D_data_type,
@@ -61,7 +63,9 @@ module PipeDEreg(
     output reg D_branch_inst,
     output reg D_branch_predict,
     output reg [3:0] D_branch_flag,
-    output reg [31:0] D_branch_fail_pc
+    output reg [31:0] D_branch_fail_pc,
+    output reg D_ll_enable,
+    output reg D_sc_enable
 );
     /**
     这里代码有一个严重的bug
@@ -104,6 +108,8 @@ module PipeDEreg(
             D_branch_predict<=1'bz;
             D_branch_flag<=4'b0;
             D_branch_fail_pc<=32'bz;
+            D_ll_enable<=0;
+            D_sc_enable<=0;
         end
         else
         begin
@@ -136,6 +142,8 @@ module PipeDEreg(
             D_branch_predict<=branch_predict;
             D_branch_flag<=branch_flag;
             D_branch_fail_pc<=branch_fail_pc;
+            D_ll_enable <= ll_enable;
+            D_sc_enable <= sc_enable;
         end
     end
 endmodule

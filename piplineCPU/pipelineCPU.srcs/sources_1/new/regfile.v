@@ -134,10 +134,10 @@ module regfile(
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             for (i = 0; i < 32; i=i+1) begin
-                array_reg[i] = 32'h0;  // 复位所有寄存器
+                array_reg[i] <= 32'h0;  // 复位所有寄存器
             end
-        end else if(!rst && waddr != 6'b0) begin  // 避免写入零寄存器
-            array_reg[waddr] = wdata;
+        end else if(!rst && waddr != 6'b0 && we) begin  // 避免写入零寄存器
+            array_reg[waddr] <= wdata;
         end 
     end
     

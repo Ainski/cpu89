@@ -27,7 +27,7 @@ always @(posedge CLK or posedge rst) begin
         // 复位时PC初始化为起始地址0x00400000
         data_out <= 32'h00400000;
         halting <= 0;
-    end else if (halt||halting) begin
+    end else if (!ena || (halt||halting)) begin
         // 遇到halt指令时进入停止状态
         data_out <= data_out;
         halting <= halting;

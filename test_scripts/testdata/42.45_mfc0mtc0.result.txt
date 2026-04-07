@@ -1,5 +1,3 @@
-pc: 00400024
-instr: 40047000
 regfile0: 00000000
 regfile1: 00000003
 regfile2: ffffffff

@@ -68,9 +68,13 @@ module PipeID(
     output o_branch_predict,
     output [3:0] o_branch_flag,
     output [31:0] o_branch_fail_pc,
-    
+    output  cp0_exception,
+
     output [31:0] count,
     output [31:0] compare,
+
+    output o_sc_enable,
+    output o_ll_enable,
     
     output halt
 );
@@ -101,15 +105,16 @@ module PipeID(
     wire [3:0] branch_flag;
     wire cp0_mfc0;
     wire cp0_mtc0;
-    wire cp0_exception;
     wire cu_exception;
     wire cp0_eret;
     wire [4:0] cp0_cause;
     wire [31:0] cp0_status;
     wire cp0_delay;
-    wire LLbit_idata;
-    wire LLbit_wena;
-    wire LLbit_odata;
+    // wire LLbit_idata;
+    // wire LLbit_wena;
+    // wire LLbit_odata;
+    wire ll_enable;
+    wire sc_enable;
     decoder DECODER(
         .inst(inst),
         .rs(rs),
@@ -138,7 +143,6 @@ module PipeID(
         .cp0_exec_addr(o_cp0_exc_addr),
         .cp0_int_i(i_cp0_int_i),
         .cp0_status(cp0_status),
-        .LLbit_odata(LLbit_odata),
         .DMEM_wena(DMEM_wena),
         .data_type(o_data_type),
         .CBW_sign(o_CBW_sign),
@@ -168,8 +172,8 @@ module PipeID(
         .branch_predict(o_branch_predict),
         .branch_flag(branch_flag),
         .branch_fail_pc(o_branch_fail_pc),
-        .LLbit_idata(LLbit_idata),
-        .LLbit_wena(LLbit_wena)
+        .ll_enable(ll_enable),
+        .sc_enable(sc_enable)
     );
     direct DIRECT(
         .EXE_rf_wena(i_EXE_rf_wena),
@@ -277,14 +281,15 @@ module PipeID(
         .exc_addr(o_cp0_exc_addr),
         .timer_int_o(o_cp0_timer_int)
     );
-    LLbit_reg LLbit_REG(
-        .clk(clk),
-        .rst(rst),
-        .flush(cp0_exception),
-        .LLbit_i(LLbit_idata),
-        .we(LLbit_wena),
-        .LLbit_o(LLbit_odata)
-    );
+    // 该cpu未能正确实现ll sc功能，重写
+    // LLbit_reg LLbit_REG(
+    //     .clk(clk),
+    //     .rst(rst),
+    //     .flush(cp0_exception),
+    //     .LLbit_i(LLbit_idata),
+    //     .we(LLbit_wena),
+    //     .LLbit_o(LLbit_odata)
+    // );
     // assign o_pc4=pc4;
     // assign o_DMEM_wena=(i_blockade|i_stall|o_stall)? 0:DMEM_wena;
     // assign o_mux_pc=(i_blockade|i_stall|o_stall)? 0:mux_pc;
@@ -310,4 +315,6 @@ module PipeID(
     assign o_blockade=(i_stall|o_stall)? 0:blockade;
     assign o_branch_inst=(i_stall|o_stall)? 0:branch_inst;
     assign o_branch_flag=(i_stall|o_stall)? 4'b0000:branch_flag;
+    assign o_ll_enable =  (i_stall|o_stall)? 0 : ll_enable;
+    assign o_sc_enable = (i_stall|o_stall) ? 0: sc_enable;
 endmodule

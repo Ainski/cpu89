@@ -17,6 +17,7 @@ module cpmem(
     assign offset = exact_addr[1:0];
     assign appr_addr = exact_addr & 32'hfffffffc;
     parameter Wdata=4'd0,Hdata=4'd1,Bdata=4'd2,Ldata=4'd3,Rdata=4'd4;
+    
     always@(*)
     begin
         case(data_type)

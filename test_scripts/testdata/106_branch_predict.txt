@@ -1,0 +1,118 @@
+sll $0,$0,0        # 空指令（和你示例一致）
+
+# 初始化寄存器
+addi $0,$0,0x0000
+addi $1,$0,0xFFFB  # 负数，用于分支
+addi $2,$0,0xFFFF  # 负数，用于分支
+addi $13,$0,0x0005 # 正数，用于不分支
+addi $14,$0,0x0000 # 零，用于不分支
+
+# ==============================
+# 第一阶段：连续3次 分支预测错误
+# 预测：不分支 | 实际：分支
+# ==============================
+
+# 错误1
+bltz $1,TARGET1
+addi $3,$0,0xFFFF
+TARGET1:
+addi $4,$0,0x0001
+
+# 错误2
+bltz $2,TARGET2
+addi $5,$0,0xFFFF
+TARGET2:
+addi $6,$0,0x0001
+
+# 错误3
+bltz $1,TARGET3
+addi $7,$0,0xFFFF
+TARGET3:
+addi $8,$0,0x0001
+
+# ==============================
+# 第二阶段：连续3次 分支预测正确
+# 预测：不分支 | 实际：不分支
+# ==============================
+
+# 正确1
+bltz $13,TARGET4
+addi $9,$0,0x0001
+j TARGET4_SKIP
+TARGET4:
+addi $9,$0,0xFFFF
+TARGET4_SKIP:
+
+# 正确2
+bltz $14,TARGET5
+addi $10,$0,0x0001
+j TARGET5_SKIP
+TARGET5:
+addi $10,$0,0xFFFF
+TARGET5_SKIP:
+
+# 正确3
+bltz $13,TARGET6
+addi $11,$0,0x0001
+j TARGET6_SKIP
+TARGET6:
+addi $11,$0,0xFFFF
+TARGET6_SKIP:
+
+# ==============================
+# 第三阶段：连续2次 分支预测正确
+# 预测：不分支 | 实际：不分支
+# ==============================
+
+# 正确4
+bltz $14,TARGET7
+addi $12,$0,0x0001
+j TARGET7_SKIP
+TARGET7:
+addi $12,$0,0xFFFF
+TARGET7_SKIP:
+
+# 正确5
+bltz $13,TARGET8
+addi $15,$0,0x0001
+j TARGET8_SKIP
+TARGET8:
+addi $15,$0,0xFFFF
+TARGET8_SKIP:
+
+# ==============================
+# 第四阶段：连续2次 分支预测错误
+# 预测：不分支 | 实际：分支
+# ==============================
+
+# 错误4
+bltz $1,TARGET9
+addi $16,$0,0xFFFF
+TARGET9:
+addi $16,$0,0x0001
+
+# 错误5
+bltz $2,TARGET10
+addi $17,$0,0xFFFF
+TARGET10:
+addi $17,$0,0x0001
+
+# ==============================
+# 第五阶段：1次正确 + 1次错误
+# ==============================
+
+# 正确6
+bltz $14,TARGET11
+addi $18,$0,0x0001
+j TARGET11_SKIP
+TARGET11:
+addi $18,$0,0xFFFF
+TARGET11_SKIP:
+
+# 错误6
+bltz $1,TARGET12
+addi $19,$0,0xFFFF
+TARGET12:
+addi $19,$0,0x0001
+
+halt

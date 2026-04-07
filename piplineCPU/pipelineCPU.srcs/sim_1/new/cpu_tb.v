@@ -136,10 +136,13 @@ module test;
     wire [31:0] PipeEXE_alu_out;
     assign PipeWB_mux_rf_DMEM = test.uut.sccpu.WB.mux_rf_DMEM;
     assign PipeWB_exe_out = test.uut.sccpu.WB.exe_out;
-    assign PipeWB_DMEM_rdata = test.uut.sccpu.WB.DMEM_rdata;
+    assign PipeWB_DMEM_rdata = test.uut.sccpu.MEM.o_DMEM_rdata;
     assign PipeWB_rf_wdata = test.uut.sccpu.WB.rf_wdata;
     assign PipeEXE_alu_out = test.uut.sccpu.EXE.ALU.r;
-
+    
+    // 修改：直接从 sccomp_dataflow 中的 memory 实例获取 rdata
+    wire [31:0] rdmemdata;
+    assign rdmemdata = test.uut.DMEM.rdata;
     wire [31:0] mux_alu_rs;
     wire [31:0] mux_alu_rt;
     wire [31:0] mux_alu_ext5;
@@ -199,22 +202,46 @@ module test;
     // assign alu_a = test.uut.sccpu.EXE.ALU.a;
     // assign alu_b = test.uut.sccpu.EXE.ALU.b;
     // assign alu_r = test.uut.sccpu.EXE.ALU.r;
-    // wire branch_predict_success,branch_predict_fail;
-    // assign branch_predict_success = test.uut.sccpu.ID.CONTROL_UNIT.branch_predict_success;
-    // assign branch_predict_fail = test.uut.sccpu.ID.CONTROL_UNIT.branch_predict_fail;
+    wire branch_predict_success,branch_predict_fail;
+    assign branch_predict_success = test.uut.sccpu.ID.CONTROL_UNIT.branch_predict_success;
+    assign branch_predict_fail = test.uut.sccpu.ID.CONTROL_UNIT.branch_predict_fail;
 
-    // wire [31:0] npc ;
-    // assign npc = test.uut.sccpu.IF.MUX_PC.out;
-    // wire [7:0] mux_pc_mux;
-    // assign mux_pc_mux = test.uut.sccpu.IF.MUX_PC.mux;
+    wire [31:0] npc ;
+    assign npc = test.uut.sccpu.IF.MUX_PC.out;
+    wire [7:0] mux_pc_mux;
+    assign mux_pc_mux = test.uut.sccpu.IF.MUX_PC.mux;
 
-    // wire i_blockade,i_stall,o_stall;
-    // assign i_blockade = test.uut.sccpu.ID.i_blockade;
-    // assign i_stall = test.uut.sccpu.ID.i_stall;
-    // assign o_stall = test.uut.sccpu.ID.o_stall;
+    wire i_blockade,i_stall,o_stall;
+    assign i_blockade = test.uut.sccpu.ID.i_blockade;
+    assign i_stall = test.uut.sccpu.ID.i_stall;
+    assign o_stall = test.uut.sccpu.ID.o_stall;
 
-    // assign iID_blockade = test.uut.sccpu.iID_blockade;
-    // assign iID_branch_predict_fail = test.uut.sccpu.iID_branch_predict_fail;
+    assign iID_blockade = test.uut.sccpu.iID_blockade;
+    assign iID_branch_predict_fail = test.uut.sccpu.iID_branch_predict_fail;
+
+
+    // wire [7:0] pcmux;
+    // wire [31:0] npc_if ;
+
+    // assign pcmux = test.uut.sccpu.IF.pcmux;
+    // assign npc_if = test.uut.sccpu.IF.npc;
+
+    // wire [31:0] DMEM_addr,DMEM_rdata,o_DMEM_addr;
+    // assign DMEM_addr =  test.uut.sccpu.MEM.o_DMEM_addr;
+    // assign DMEM_rdata =  test.uut.sccpu.MEM.o_DMEM_rdata;
+    // assign DMEM_wdata =  test.uut.sccpu.MEM.i_DMEM_wdata;
+
+
+    // assign ll_enable =test.uut.sccpu.MEM.ll_enable;
+    // assign sc_enable =test.uut.sccpu.MEM.sc_enable;
+
+    wire sc_enable,ll_enable ;
+    assign sc_enable = test.uut.sccpu.ID.CONTROL_UNIT.sc_enable;
+    assign ll_enable = test.uut.sccpu.ID.ll_enable;
+
+    wire [7:0] INST;
+
+    assign INST =test.uut.sccpu.ID.INST;
 
 
     // wire [31:0] o_cp0_rdata;
@@ -241,25 +268,44 @@ module test;
     // assign iID_hi_idata=oMWreg_hi_idata;
     // assign iID_lo_ena=oMWreg_lo_ena;
     // assign iID_lo_idata=oMWreg_lo_idata;
-    wire [31:0] iID_EXE_hi_idata,iID_EXE_lo_idata,iID_MEM_hi_idata,iID_MEM_lo_idata,iID_hi_idata,iID_lo_idata;
-    assign iID_EXE_hi_ena = test.uut.sccpu.iID_EXE_hi_ena;
-    assign iID_EXE_hi_idata = test.uut.sccpu.iID_EXE_hi_idata;
-    assign iID_EXE_lo_ena = test.uut.sccpu.iID_EXE_lo_ena;
-    assign iID_EXE_lo_idata = test.uut.sccpu.iID_EXE_lo_idata;
-    assign iID_MEM_hi_ena = test.uut.sccpu.iID_MEM_hi_ena;
-    assign iID_MEM_hi_idata = test.uut.sccpu.iID_MEM_hi_idata;
-    assign iID_MEM_lo_ena = test.uut.sccpu.iID_MEM_lo_ena;
-    assign iID_MEM_lo_idata = test.uut.sccpu.iID_MEM_lo_idata;
-    assign iID_hi_ena = test.uut.sccpu.iID_hi_ena;
-    assign iID_hi_idata = test.uut.sccpu.iID_hi_idata;
-    assign iID_lo_ena = test.uut.sccpu.iID_lo_ena;
-    assign iID_lo_idata = test.uut.sccpu.iID_lo_idata; 
+    // wire [31:0] iID_EXE_hi_idata,iID_EXE_lo_idata,iID_MEM_hi_idata,iID_MEM_lo_idata,iID_hi_idata,iID_lo_idata;
+    // assign iID_EXE_hi_ena = test.uut.sccpu.iID_EXE_hi_ena;
+    // assign iID_EXE_hi_idata = test.uut.sccpu.iID_EXE_hi_idata;
+    // assign iID_EXE_lo_ena = test.uut.sccpu.iID_EXE_lo_ena;
+    // assign iID_EXE_lo_idata = test.uut.sccpu.iID_EXE_lo_idata;
+    // assign iID_MEM_hi_ena = test.uut.sccpu.iID_MEM_hi_ena;
+    // assign iID_MEM_hi_idata = test.uut.sccpu.iID_MEM_hi_idata;
+    // assign iID_MEM_lo_ena = test.uut.sccpu.iID_MEM_lo_ena;
+    // assign iID_MEM_lo_idata = test.uut.sccpu.iID_MEM_lo_idata;
+    // assign iID_hi_ena = test.uut.sccpu.iID_hi_ena;
+    // assign iID_hi_idata = test.uut.sccpu.iID_hi_idata;
+    // assign iID_lo_ena = test.uut.sccpu.iID_lo_ena;
+    // assign iID_lo_idata = test.uut.sccpu.iID_lo_idata; 
     
-    wire [63:0] mult_s_out;
-    wire [31:0] mult_s_a ,mult_s_b;
-    assign mult_s_out = test.uut.sccpu.EXE.MULT.s_z;
-    assign mult_s_a = test.uut.sccpu.EXE.MULT.s_a;
-    assign mult_s_b = test.uut.sccpu.EXE.MULT.s_b;
+    // wire [63:0] mult_s_out;
+    // wire [31:0] mult_s_a ,mult_s_b;
+    // assign mult_s_out = test.uut.sccpu.EXE.MULT.s_z;
+    // assign mult_s_a = test.uut.sccpu.EXE.MULT.s_a;
+    // assign mult_s_b = test.uut.sccpu.EXE.MULT.s_b;
+
+    // wire mov_cond;
+    // assign mov_cond = test.uut.sccpu.EXE.mov_cond;
+    // wire [31:0]rf_rdata2;
+
+    // assign rf_rdata2 = test.uut.sccpu.EXE.rf_rdata2;
+    // assign o_rf_wena = test.uut.sccpu.EXE.o_rf_wena;
+
+    // wire [4:0] EM_rf_waddr,D_rf_waddr;
+    // wire [31:0] EM_rf_rdata2,D_rf_rdata2;
+
+    // wire EM_rf_wena,D_rf_wena;
+
+    // assign EM_rf_wena = test.uut.sccpu.EMreg.rf_wena;
+    // assign D_rf_wena = test.uut.sccpu.EMreg.D_rf_wena;
+    // assign EM_rf_waddr = test.uut.sccpu.EMreg.rf_waddr;
+    // assign D_rf_waddr = test.uut.sccpu.EMreg.D_rf_waddr;
+    // assign EM_rf_rdata2 = test.uut.sccpu.EMreg.rf_rdata2;
+    // assign D_rf_rdata2 = test.uut.sccpu.EMreg.D_rf_rdata2;
 
 
 endmodule

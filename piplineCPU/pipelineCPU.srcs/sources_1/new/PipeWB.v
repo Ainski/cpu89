@@ -11,4 +11,16 @@ module PipeWB(
         .choose(mux_rf_DMEM),
         .c(rf_wdata)
     );
+// initial begin
+//     #10;
+//     forever begin
+//         $display("time %t | rf_wdata = %h", $time, rf_wdata);
+//         $display("time %t | exe_out = %h", $time, exe_out);
+//         $display("time %t | DMEM_rdata = %h", $time, DMEM_rdata);
+//         $display("time %t | mux_rf_DMEM = %b", $time, mux_rf_DMEM);
+//         $display("------------------------------------");
+//         #10;
+//     end 
+// end
+    
 endmodule

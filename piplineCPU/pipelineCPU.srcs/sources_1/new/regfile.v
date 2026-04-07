@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 // module regfile(
-//     input clk,              //�½�����Ч
-//     input rst,              //�ߵ�ƽ��Ч
+//     input clk,              
+//     input rst,              
 //     input we,
 //     input [4:0] raddr1,
 //     input [4:0] raddr2,
@@ -50,7 +50,6 @@
 // endmodule
 
 
-`timescale 1ns / 1ps
 module regfile(
     input clk,
     input rst,
@@ -143,8 +142,8 @@ module regfile(
     end
     
     // 输出逻辑保持不变
-    assign rt = array_reg[rdata2];
+    assign rdata1 = array_reg[raddr1];
     assign rd = array_reg[waddr];
-    assign rs = array_reg[rdata1];
+    assign rdata2 = array_reg[raddr2];
 
 endmodule

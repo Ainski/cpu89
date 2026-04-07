@@ -22,6 +22,8 @@ import sys
 import tempfile
 import subprocess
 from pathlib import Path
+import tkinter as tk
+from tkinter import ttk, scrolledtext, messagebox
 
 
 def collect_files(paths, extensions=None):
@@ -228,8 +230,8 @@ proc run_single_test {test_file results_dir} {
     # ========================================
     # 9. 复制标准结果文件
     # ========================================
-    regsub {\\\\.hex\\\\.txt$} $test_file ".result.txt" std_result_file
-
+    regsub {\\.hex\\.txt$} $test_file ".result.txt" std_result_file
+    echo "$std_result_file"
     set output_std_result_file "$results_dir/${test_name}_std_result.txt"
     if {[file exists $std_result_file]} {
         file copy -force $std_result_file $output_std_result_file
@@ -246,10 +248,9 @@ proc run_single_test {test_file results_dir} {
 
     set comp_file "$results_dir/${test_name}_comparison_result.txt"
     if {[file exists $comp_file]} {
-        # 使用 cp936 编码读取文件（兼容 txt_compare 的中文输出）
-        # 注意：Tcl 中使用 cp936 而非 gbk
+        # 使用 GBK 编码读取文件（兼容 txt_compare 的中文输出）
         set comp_fid [open $comp_file r]
-        catch {fconfigure $comp_fid -encoding cp936}
+        fconfigure $comp_fid -encoding cp936
         set comp_content [read $comp_fid]
         close $comp_fid
 
@@ -395,6 +396,251 @@ def run_vsim(tmp_file):
     print(f"Simulation completed. Log saved to: {log_file}")
     
 
+def show_gui_results(results_dir, testdata_dir):
+    """
+    使用 GUI 展示测试结果，按测试用例分组，展示 hex/txt/sim_result/std_result。
+    """
+    # 收集所有测试用例
+    testdata_path = Path(testdata_dir)
+    results_path = Path(results_dir)
+    
+    # 获取所有 hex.txt 文件
+    hex_files = sorted(testdata_path.glob('*.hex.txt'))
+    
+    if not hex_files:
+        messagebox.showerror("错误", f"在 {testdata_dir} 中未找到测试文件")
+        return
+    
+    # 创建主窗口
+    root = tk.Tk()
+    root.title("CPU 测试结果查看器")
+    root.geometry("1200x800")
+    
+    # 创建主框架
+    main_frame = ttk.Frame(root, padding="10")
+    main_frame.pack(fill=tk.BOTH, expand=True)
+    
+    # 左侧：测试用例列表
+    left_frame = ttk.Frame(main_frame)
+    left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 10))
+    
+    ttk.Label(left_frame, text="测试用例列表", font=('Arial', 10, 'bold')).pack(pady=(0, 5))
+    
+    # 创建列表框
+    listbox_frame = ttk.Frame(left_frame)
+    listbox_frame.pack(fill=tk.BOTH, expand=True)
+    
+    scrollbar = ttk.Scrollbar(listbox_frame)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    
+    test_listbox = tk.Listbox(listbox_frame, width=40, yscrollcommand=scrollbar.set, font=('Consolas', 9))
+    test_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    scrollbar.config(command=test_listbox.yview)
+    
+    # 填充测试用例列表
+    test_cases = []
+    for hex_file in hex_files:
+        test_name = hex_file.stem.replace('.hex', '')
+        test_cases.append({
+            'name': test_name,
+            'hex_file': hex_file,
+            'txt_file': hex_file.with_suffix('').with_suffix('').with_suffix(".txt"),  # 去掉 .txt
+            'sim_result': results_path / f'{test_name}_sim_result.txt',
+            'std_result': results_path / f'{test_name}_std_result.txt',
+            'comparison_result': results_path / f'{test_name}_comparison_result.txt'
+        })
+        test_listbox.insert(tk.END, test_name)
+
+    # 右侧：文件内容显示区
+    right_frame = ttk.Frame(main_frame)
+    right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+    # 创建 Notebook (标签页)
+    notebook = ttk.Notebook(right_frame)
+    notebook.pack(fill=tk.BOTH, expand=True)
+
+    # 创建五个标签页
+    tabs = {}
+    for tab_name in ['hex', 'txt', 'sim_result', 'std_result', 'comparison_result']:
+        tab_frame = ttk.Frame(notebook)
+        notebook.add(tab_frame, text=tab_name)
+
+        text_widget = scrolledtext.ScrolledText(tab_frame, wrap=tk.WORD, font=('Consolas', 9))
+        text_widget.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        text_widget.config(state=tk.DISABLED)
+
+        tabs[tab_name] = text_widget
+    
+    def load_test_content(event=None):
+        """加载选中测试用例的内容"""
+        selection = test_listbox.curselection()
+        if not selection:
+            return
+        
+        test_case = test_cases[selection[0]]
+        test_name = test_case['name']
+        
+        # 清空所有内容
+        for tab_name, text_widget in tabs.items():
+            text_widget.config(state=tk.NORMAL)
+            text_widget.delete('1.0', tk.END)
+        
+        # 读取并显示 hex 文件
+        try:
+            hex_file = test_case['hex_file']
+            if hex_file.exists():
+                with open(hex_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                tabs['hex'].config(state=tk.NORMAL)
+                tabs['hex'].insert('1.0', content)
+            else:
+                tabs['hex'].config(state=tk.NORMAL)
+                tabs['hex'].insert('1.0', f'文件不存在: {hex_file}')
+        except Exception as e:
+            tabs['hex'].config(state=tk.NORMAL)
+            tabs['hex'].insert('1.0', f'读取失败: {e}')
+        finally:
+            tabs['hex'].config(state=tk.DISABLED)
+        
+        # 读取并显示 txt 文件 (汇编源码)
+        try:
+            txt_file = test_case['txt_file']
+            if txt_file.exists():
+                with open(txt_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                tabs['txt'].config(state=tk.NORMAL)
+                tabs['txt'].insert('1.0', content)
+            else:
+                tabs['txt'].config(state=tk.NORMAL)
+                tabs['txt'].insert('1.0', f'文件不存在: {txt_file}')
+        except Exception as e:
+            tabs['txt'].config(state=tk.NORMAL)
+            tabs['txt'].insert('1.0', f'读取失败: {e}')
+        finally:
+            tabs['txt'].config(state=tk.DISABLED)
+        
+        # 读取并显示仿真结果
+        try:
+            sim_result = test_case['sim_result']
+            if sim_result.exists():
+                with open(sim_result, 'r', encoding='cp936') as f:
+                    content = f.read()
+                tabs['sim_result'].config(state=tk.NORMAL)
+                tabs['sim_result'].insert('1.0', content)
+            else:
+                tabs['sim_result'].config(state=tk.NORMAL)
+                tabs['sim_result'].insert('1.0', f'文件不存在: {sim_result}')
+        except Exception as e:
+            tabs['sim_result'].config(state=tk.NORMAL)
+            tabs['sim_result'].insert('1.0', f'读取失败: {e}')
+        finally:
+            tabs['sim_result'].config(state=tk.DISABLED)
+        
+        # 读取并显示标准结果
+        try:
+            std_result = test_case['std_result']
+            if std_result.exists():
+                with open(std_result, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                tabs['std_result'].config(state=tk.NORMAL)
+                tabs['std_result'].insert('1.0', content)
+            else:
+                tabs['std_result'].config(state=tk.NORMAL)
+                tabs['std_result'].insert('1.0', f'文件不存在: {std_result}')
+        except Exception as e:
+            tabs['std_result'].config(state=tk.NORMAL)
+            tabs['std_result'].insert('1.0', f'读取失败: {e}')
+        finally:
+            tabs['std_result'].config(state=tk.DISABLED)
+        
+        # 读取并显示比对结果
+        try:
+            comparison_result = test_case['comparison_result']
+            if comparison_result.exists():
+                with open(comparison_result, 'r', encoding='cp936') as f:
+                    content = f.read()
+                tabs['comparison_result'].config(state=tk.NORMAL)
+                tabs['comparison_result'].insert('1.0', content)
+            else:
+                tabs['comparison_result'].config(state=tk.NORMAL)
+                tabs['comparison_result'].insert('1.0', f'文件不存在: {comparison_result}')
+        except Exception as e:
+            tabs['comparison_result'].config(state=tk.NORMAL)
+            tabs['comparison_result'].insert('1.0', f'读取失败: {e}')
+        finally:
+            tabs['comparison_result'].config(state=tk.DISABLED)
+    
+    # 绑定选择事件
+    test_listbox.bind('<<ListboxSelect>>', load_test_content)
+    
+    # 默认选中第一个测试用例
+    if test_cases:
+        test_listbox.selection_set(0)
+        load_test_content()
+    
+    # 添加统计信息和日志按钮
+    stats_frame = ttk.Frame(main_frame)
+    stats_frame.pack(fill=tk.X, pady=(10, 0))
+    
+    # 统计通过/失败数量
+    pass_count = 0
+    fail_count = 0
+    for test_case in test_cases:
+        sim_result = test_case['sim_result']
+        std_result = test_case['std_result']
+        if sim_result.exists() and std_result.exists():
+            try:
+                with open(sim_result, 'r', encoding='cp936') as f:
+                    sim_content = f.read()
+                with open(std_result, 'r', encoding='utf-8') as f:
+                    std_content = f.read()
+                if sim_content.strip() == std_content.strip():
+                    pass_count += 1
+                else:
+                    fail_count += 1
+            except:
+                fail_count += 1
+        else:
+            fail_count += 1
+    
+    # 统计信息标签
+    stats_label = ttk.Label(stats_frame, 
+              text=f"总计: {len(test_cases)} 个测试 | 通过: {pass_count} | 失败: {fail_count} | 通过率: {pass_count/len(test_cases)*100:.1f}%" if test_cases else "无测试用例",
+              font=('Arial', 10, 'bold'))
+    stats_label.pack(side=tk.LEFT, padx=(0, 10))
+    
+    # 添加打开日志文件的按钮
+    def open_latest_log():
+        """打开最新的仿真日志文件"""
+        log_dir = Path("log")
+        if not log_dir.exists():
+            messagebox.showwarning("警告", "日志目录不存在")
+            return
+        
+        # 获取所有 .log 文件
+        log_files = sorted(log_dir.glob("*.log"), key=os.path.getmtime, reverse=True)
+        if not log_files:
+            messagebox.showwarning("警告", "未找到日志文件")
+            return
+        
+        # 打开最新的日志文件
+        latest_log = log_files[0]
+        try:
+            if sys.platform.startswith('win'):
+                os.startfile(latest_log)
+            elif sys.platform == 'darwin':
+                subprocess.Popen(['open', latest_log])
+            else:
+                subprocess.Popen(['xdg-open', latest_log])
+        except Exception as e:
+            messagebox.showerror("错误", f"无法打开日志文件: {e}")
+    
+    log_button = ttk.Button(stats_frame, text="📄 打开最新仿真日志", command=open_latest_log)
+    log_button.pack(side=tk.LEFT)
+    
+    root.mainloop()
+
+
 def clean_generated_files(config_file, tcl_script, exec_script):
     """
     清理生成的文件。
@@ -431,6 +677,7 @@ def main():
     parser.add_argument("--output-exec", default=None, help="Output execution wrapper filename (default: run_vsim.sh/.bat).")
     parser.add_argument("--clean", action="store_true", help="Clean all generated files (scripts and results directory).")
     parser.add_argument("--not_run", action="store_true", help="NOT !!! Run simulation directly without generating scripts.")
+    parser.add_argument("--gui", action="store_true", help="Show test results in GUI after simulation.")
     args = parser.parse_args()
 
     # 清理模式
@@ -484,7 +731,14 @@ def main():
             default_exec = args.output_exec
         generate_exec_wrapper(args.output_tcl, default_exec)
     elif not args.not_run:
-        run_vsim(args.output_tcl)
+        pass
+        #run_vsim(args.output_tcl)
+    
+    # 如果指定了 --gui 选项，显示 GUI 结果查看器
+    if args.gui:
+        print("Launching GUI results viewer...")
+        show_gui_results(config['results_dir'], config['testdata_dir'])
+    
     print("Done.")
 
 if __name__ == '__main__':

@@ -1,0 +1,48 @@
+sll $0,$0,0
+#initialize
+addi $0,$0,0x0000
+
+# sc test: store conditional word
+lui $1,0x1001
+ori $1,$1,0x0000
+addi $2,$0,0x5678
+ll $3,0($1)
+addi $3,$3,0x0001
+sc $3,0($1)
+lw $4,0($1)
+
+# Test sc with different values
+addi $5,$0,0x1234
+sw $5,4($1)
+ll $6,4($1)
+addi $6,$6,0x0001
+sc $6,4($1)
+lw $7,4($1)
+
+# Test sc with negative value
+lui $8,0xFFFF
+ori $8,$8,0x8000
+sw $8,8($1)
+ll $9,8($1)
+addi $9,$9,0x0001
+sc $9,8($1)
+lw $10,8($1)
+
+# Test sc with zero
+addi $11,$0,0x0000
+sw $11,12($1)
+ll $12,12($1)
+addi $12,$12,0x0001
+sc $12,12($1)
+lw $13,12($1)
+
+# Test sc with max positive
+lui $14,0x7FFF
+ori $14,$14,0xFFFF
+sw $14,16($1)
+ll $15,16($1)
+addi $15,$15,0x0001
+sc $15,16($1)
+lw $16,16($1)
+
+halt

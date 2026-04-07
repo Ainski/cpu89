@@ -1,5 +1,5 @@
 regfile0: 00000000
-regfile1: ffffffff
+regfile1: 00000001
 regfile2: 00000002
 regfile3: 00000001
 regfile4: 00000001

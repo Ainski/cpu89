@@ -1,4 +1,6 @@
 `timescale 1ns / 1ps
+
+
 module alu( 
 input [31:0] a,   //32 位输入，操作数1 
 input [31:0] b,   //32 位输入，操作数2 
@@ -87,8 +89,14 @@ output reg overflow   // 溢出标志位
       end
       4'b1001://bgez运算
       begin
-        r=a;
-        zero = (r == 0);
+        // r=a;
+        // zero = (r == 0);
+        // carry = 0;
+        // negative = (r[31] == 1);
+        // overflow = 0;
+        // 更正为lui运算
+        r={b[15:0],16'b0};
+        zero = (r==0);
         carry = 0;
         negative = (r[31] == 1);
         overflow = 0;
@@ -111,7 +119,7 @@ output reg overflow   // 溢出标志位
       end
       4'b1100://Sra运算
       begin
-        r=($signed(b) >>> $signed(a));
+        r=($signed(b) >>> a[4:0]);
         zero = (r == 0);
         //carry为最后一次被移出的位的数值
         if(a<32&&a>0)
@@ -125,7 +133,7 @@ output reg overflow   // 溢出标志位
       end
       4'b1101://srl
       begin
-        r=b>>a;
+        r=b>>a[4:0];
         zero = (r == 0);
         //carry为最后一次被移出的位的数值
         if(a<32&&a>0)
@@ -137,7 +145,7 @@ output reg overflow   // 溢出标志位
       end
       4'b1110://sll
       begin
-        r=b<<a;
+        r=b << a [4:0];
         zero = (r == 0);
         //carry为最后一次被移出的位的数值
         if(a<32&&a>0)
@@ -149,7 +157,7 @@ output reg overflow   // 溢出标志位
       end
       4'b1111://sla
       begin
-        r=b<<a;
+        r=b<<a[4:0];
         zero = (r == 0);
         //carry为最后一次被移出的位的数值
         carry = b[31];

@@ -1,0 +1,29 @@
+sll $0,$0,0
+#initialize
+addi $0,$0,0x0000
+addi $1,$0,0x0005
+addi $2,$0,0xFFFF
+
+# bgezal test: $1 = 5 > 0, should branch and link
+bgezal $1,TARGET1
+addi $3,$0,0xFFFF
+TARGET1:
+addi $4,$31,0x0000
+
+# Test bgezal with negative value (should not branch)
+addi $5,$0,0xFFFB
+bgezal $5,TARGET2
+addi $6,$0,0x0001
+j TARGET3
+TARGET2:
+addi $6,$0,0xFFFF
+TARGET3:
+
+# Test bgezal with zero (should branch)
+addi $7,$0,0x0000
+bgezal $7,TARGET4
+addi $8,$0,0xFFFF
+TARGET4:
+addi $9,$31,0x0000
+
+halt

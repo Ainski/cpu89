@@ -1,0 +1,35 @@
+sll $0,$0,0
+#initialize
+addi $0,$0,0x0000
+addi $1,$0,0xFFFB
+addi $2,$0,0xFFFF
+
+# bltzal test: $1 = -5 < 0, should branch and link
+bltzal $1,TARGET1
+addi $3,$0,0xFFFF
+TARGET1:
+addi $4,$31,0x0000
+
+# Test bltzal with positive value (should not branch)
+addi $5,$0,0x0005
+bltzal $5,TARGET2
+addi $6,$0,0x0001
+j TARGET3
+TARGET2:
+addi $6,$0,0xFFFF
+TARGET3:
+
+# Test bltzal with zero (should not branch)
+addi $7,$0,0x0000
+bltzal $7,TARGET4
+addi $8,$0,0xFFFF
+TARGET4:
+addi $9,$0,0x0001
+
+# Test bltzal with larger negative value
+addi $10,$0,0xFFFF
+bltzal $10,TARGET5
+addi $11,$31,0x0000
+TARGET5:
+
+halt

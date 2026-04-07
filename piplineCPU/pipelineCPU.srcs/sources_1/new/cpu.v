@@ -24,12 +24,15 @@ module cpu(
     wire iPC_ena;
     wire [31:0] iPC_idata;
     wire [31:0] oPC_odata;
-    pcreg#(`IMEM_ADDR) PC(
+    wire oID_halt;
+
+    PC_real PC(
         .CLK(~clk),
         .rst(rst),
         .ena(iPC_ena),
         .data_in(iPC_idata),
-        .data_out(oPC_odata)
+        .data_out(oPC_odata),
+        .halt(oID_halt)
     );
     wire [31:0] iIF_pc;
     wire [31:0] iIF_rs;
@@ -205,7 +208,8 @@ module cpu(
         .o_branch_fail_pc(oID_branch_fail_pc),
         
         .count(count),
-        .compare(compare)
+        .compare(compare),
+        .halt(oID_halt)
     );
     wire oDEreg_DMEM_wena;
     wire [3:0] oDEreg_data_type;
@@ -298,7 +302,8 @@ module cpu(
         .D_branch_inst(iEXE_branch_inst),
         .D_branch_predict(iEXE_branch_predict),
         .D_branch_flag(iEXE_branch_flag),
-        .D_branch_fail_pc(oDEreg_branch_fail_pc)
+        .D_branch_fail_pc(oDEreg_branch_fail_pc),
+        .halt(oID_halt)
     );
     wire oEXE_rf_wena;
     wire [31:0] oEXE_alu_out;
@@ -307,6 +312,7 @@ module cpu(
     wire [31:0] oEXE_lo_idata;
     wire oEXE_branch_predict_success;
     wire oEXE_branch_predict_fail;
+
     PipeEXE EXE(
         .clk(clk),
         .pc4(iEXE_pc4),

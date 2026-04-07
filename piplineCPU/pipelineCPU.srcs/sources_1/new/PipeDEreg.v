@@ -32,6 +32,7 @@ module PipeDEreg(
     input [3:0] branch_flag,
     input [31:0] branch_fail_pc,
     input blockade,
+    input halt,
     output reg D_DMEM_wena,
     output reg [3:0] D_data_type,
     output reg D_CBW_sign,
@@ -62,39 +63,47 @@ module PipeDEreg(
     output reg [3:0] D_branch_flag,
     output reg [31:0] D_branch_fail_pc
 );
+    /**
+    这里代码有一个严重的bug
+    分支预测失败时，各个阶段的接受如下
+    ID 入口     EXE 入口    MEM 入口
+    branch+2   branch+1   branch
+
+    旧的代码无法在blockade 的情况下正确屏蔽所有的输入输出，我们选择直接输出所有的rst状态的code
+    */
     always@(posedge clk or posedge rst)
     begin
-        if(rst)
+        if(rst || halt || blockade)
         begin
             D_DMEM_wena<=0;
-            D_data_type<=4'bx;
-            D_CBW_sign<=1'bx;
-            D_CHW_sign<=1'bx;
-            D_pc4<=32'bx;
-            D_mux_rf<=8'bx;
-            D_mux_rf_DMEM<=1'bx;
-            D_mux_alu<=8'bx;
-            D_mux_hi<=8'bx;
-            D_mux_lo<=8'bx;
+            D_data_type<=4'bz;
+            D_CBW_sign<=1'bz;
+            D_CHW_sign<=1'bz;
+            D_pc4<=32'bz;
+            D_mux_rf<=8'bz;
+            D_mux_rf_DMEM<=1'bz;
+            D_mux_alu<=8'bz;
+            D_mux_hi<=8'bz;
+            D_mux_lo<=8'bz;
             D_rf_wena<=0;
             D_mov_cond<=4'd0;
-            D_rf_waddr<=5'bx;
-            D_rf_rdata1<=32'bx;
-            D_rf_rdata2<=32'bx;
-            D_alu_aluc<=32'bx;
+            D_rf_waddr<=5'bz;
+            D_rf_rdata1<=32'bz;
+            D_rf_rdata2<=32'bz;
+            D_alu_aluc<=32'bz;
             D_hi_ena<=0;
-            D_hi_odata<=32'bx;
+            D_hi_odata<=32'bz;
             D_lo_ena<=0;
-            D_lo_odata<=32'bx;
+            D_lo_odata<=32'bz;
             D_hi_lo_func<=4'b0;
-            D_EXT1_n_c<=1'bx;
-            D_ext5<=32'bx;
-            D_ext16<=32'bx;
-            D_cpr<=32'bx;
+            D_EXT1_n_c<=1'bz;
+            D_ext5<=32'bz;
+            D_ext16<=32'bz;
+            D_cpr<=32'bz;
             D_branch_inst<=0;
-            D_branch_predict<=1'bx;
+            D_branch_predict<=1'bz;
             D_branch_flag<=4'b0;
-            D_branch_fail_pc<=32'bx;
+            D_branch_fail_pc<=32'bz;
         end
         else
         begin

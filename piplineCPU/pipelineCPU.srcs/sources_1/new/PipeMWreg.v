@@ -25,15 +25,15 @@ module PipeMWreg(
     begin
         if(rst)
         begin
-            D_mux_rf_DMEM<=1'bx;
+            D_mux_rf_DMEM<=1'bz;
             D_rf_wena<=0;
-            D_rf_waddr<=5'bx;
+            D_rf_waddr<=5'bz;
             D_hi_ena<=0;
-            D_hi_idata<=32'bx;
+            D_hi_idata<=32'bz;
             D_lo_ena<=0;
-            D_lo_idata<=32'bx;
+            D_lo_idata<=32'bz;
             D_exe_out<=32'b0;
-            D_DMEM_rdata<=32'bx;
+            D_DMEM_rdata<=32'bz;
         end
         else
         begin

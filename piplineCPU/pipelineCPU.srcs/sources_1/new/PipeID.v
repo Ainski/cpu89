@@ -70,8 +70,13 @@ module PipeID(
     output [31:0] o_branch_fail_pc,
     
     output [31:0] count,
-    output [31:0] compare
+    output [31:0] compare,
+    
+    output halt
 );
+    // if instruction is 32'hffff_ffff , the cpu entered the halt state
+    assign halt = (inst == 32'hffff_ffff);
+    
     wire DMEM_wena;
     wire [7:0] mux_pc;
     wire [4:0] rs;
@@ -233,7 +238,7 @@ module PipeID(
     );    
     extend16 EXT16(
         .a(immediate),
-        .sign(EXT16_sign),             //1��ʾ�з���
+        .sign(EXT16_sign),
         .b(o_ext16)
     );
     extend18 EXT18(
@@ -280,16 +285,29 @@ module PipeID(
         .we(LLbit_wena),
         .LLbit_o(LLbit_odata)
     );
+    // assign o_pc4=pc4;
+    // assign o_DMEM_wena=(i_blockade|i_stall|o_stall)? 0:DMEM_wena;
+    // assign o_mux_pc=(i_blockade|i_stall|o_stall)? 0:mux_pc;
+    // assign o_rf_wena=(i_blockade|i_stall|o_stall)? 0:rf_wena;
+    // assign o_hi_ena=(i_blockade|i_stall|o_stall)? 0:hi_ena;
+    // assign o_lo_ena=(i_blockade|i_stall|o_stall)? 0:lo_ena;
+    // assign cpr_ena=(i_blockade|i_stall|o_stall)? 0:cp0_mtc0;
+    // assign cp0_exception=(i_blockade|i_stall|o_stall)? 0:cu_exception;
+    // assign cp0_delay=(i_blockade|i_stall|o_stall);
+    // assign o_blockade=(i_blockade|i_stall|o_stall)? 0:blockade;
+    // assign o_branch_inst=(i_blockade|i_stall|o_stall)? 0:branch_inst;
+    // assign o_branch_flag=(i_blockade|i_stall|o_stall)? 4'b0000:branch_flag;
+    // 严重bug ： 不应该再使用i_blockade 信号控制对应内容，因为这里的信号控制了下一条正确指令的信号，对于j 之后写入一条 除了add以外的指令都会出现错误。
     assign o_pc4=pc4;
-    assign o_DMEM_wena=(i_blockade|i_stall|o_stall)? 0:DMEM_wena;
-    assign o_mux_pc=(i_blockade|i_stall|o_stall)? 0:mux_pc;
-    assign o_rf_wena=(i_blockade|i_stall|o_stall)? 0:rf_wena;
-    assign o_hi_ena=(i_blockade|i_stall|o_stall)? 0:hi_ena;
-    assign o_lo_ena=(i_blockade|i_stall|o_stall)? 0:lo_ena;
-    assign cpr_ena=(i_blockade|i_stall|o_stall)? 0:cp0_mtc0;
-    assign cp0_exception=(i_blockade|i_stall|o_stall)? 0:cu_exception;
-    assign cp0_delay=(i_blockade|i_stall|o_stall);
-    assign o_blockade=(i_blockade|i_stall|o_stall)? 0:blockade;
-    assign o_branch_inst=(i_blockade|i_stall|o_stall)? 0:branch_inst;
-    assign o_branch_flag=(i_blockade|i_stall|o_stall)? 4'b0000:branch_flag;
+    assign o_DMEM_wena=(i_stall|o_stall)? 0:DMEM_wena;
+    assign o_mux_pc=(i_stall|o_stall)? 0:mux_pc;
+    assign o_rf_wena=(i_stall|o_stall)? 0:rf_wena;
+    assign o_hi_ena=(i_stall|o_stall)? 0:hi_ena;
+    assign o_lo_ena=(i_stall|o_stall)? 0:lo_ena;
+    assign cpr_ena=(i_stall|o_stall)? 0:cp0_mtc0;
+    assign cp0_exception=(i_stall|o_stall)? 0:cu_exception;
+    assign cp0_delay=(i_stall|o_stall);
+    assign o_blockade=(i_stall|o_stall)? 0:blockade;
+    assign o_branch_inst=(i_stall|o_stall)? 0:branch_inst;
+    assign o_branch_flag=(i_stall|o_stall)? 4'b0000:branch_flag;
 endmodule

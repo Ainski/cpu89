@@ -1,3 +1,7 @@
+`timescale 1ns / 1ps
+
+
+
 module ADD(
     input signed [31:0] a,
     input signed [31:0] b,

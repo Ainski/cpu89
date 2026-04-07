@@ -24,7 +24,7 @@ module cp0(
     parameter reg_Count=5'd9,reg_Compare=5'd11,reg_Status=5'd12,reg_Cause=5'd13,reg_EPC=5'd14,reg_PRid=5'd15,reg_Config=5'd16;
     parameter IE=5'd0,EXL=5'd1,IM2=5'd10;
     reg [31:0] regfiles [0:31];
-    assign rdata = mfc0? regfiles[Rd]:32'hxxxxxxxx;
+    assign rdata = mfc0? regfiles[Rd]:32'hz;
     assign status = regfiles[reg_Status];
     assign count=regfiles[reg_Count];
     assign compare=regfiles[reg_Compare];
@@ -114,7 +114,7 @@ module cp0(
             begin
                 if(Rd==reg_Cause)
                 begin
-                    regfiles[reg_Cause][9:8]<=wdata[9:8];
+                    regfiles[reg_Cause][9:8]<=wdata[9:8];//这里的设计似乎与mars当中不同，暂不处理
                     regfiles[reg_Cause][23:22]<=wdata[23:22];
                 end
                 else

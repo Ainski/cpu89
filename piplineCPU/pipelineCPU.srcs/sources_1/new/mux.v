@@ -68,7 +68,7 @@ module mux_alu(
         mux_alu_Rs_Rt:begin a<=rs;b<=rt;end
         mux_alu_ext5_Rt:begin a<=ext5;b<=rt;end
         mux_alu_Rs_EXT16:begin a<=rs;b<=ext16;end
-        mux_alu_x_EXT16:begin a<=32'hxxxxxxxx;b<=ext16;end
+        mux_alu_x_EXT16:begin a<=32'hz;b<=ext16;end
         mux_alu_Rs_0:begin a<=rs;b<=32'b0;end
         endcase
     end

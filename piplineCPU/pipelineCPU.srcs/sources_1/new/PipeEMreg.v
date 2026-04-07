@@ -36,19 +36,19 @@ module PipeEMreg(
         if(rst)
         begin
             D_DMEM_wena<=0;
-            D_data_type<=4'bx;
-            D_CBW_sign<=1'bx;
-            D_CHW_sign<=1'bx;
-            D_mux_rf_DMEM<=1'bx;
-            D_rf_rdata2<=32'bx;
+            D_data_type<=4'bz;
+            D_CBW_sign<=1'bz;
+            D_CHW_sign<=1'bz;
+            D_mux_rf_DMEM<=1'bz;
+            D_rf_rdata2<=32'bz;
             D_rf_wena<=0;
-            D_rf_waddr<=5'bx;
+            D_rf_waddr<=5'bz;
             D_hi_ena<=0;
-            D_hi_idata<=32'bx;
+            D_hi_idata<=32'bz;
             D_lo_ena<=0;
-            D_lo_idata<=32'bx;
-            D_alu_out<=32'bx;
-            D_exe_out<=32'bx;
+            D_lo_idata<=32'bz;
+            D_alu_out<=32'bz;
+            D_exe_out<=32'bz;
         end
         else
         begin

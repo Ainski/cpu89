@@ -1,0 +1,52 @@
+sll $0,$0,0
+#initialize
+addi $0,$0,0x0000
+addi $1,$0,0x0003
+addi $2,$0,0x0004
+lui $3,0xFFFF
+ori $3,$3,0xFFFC
+mtlo $3
+
+msub $1,$2
+mfhi $4
+mflo $5
+addi $6,$0,0x0000
+
+addi $7,$0,0x0005
+addi $8,$0,0x0006
+lui $9,0xFFFF
+ori $9,$9,0xFFE9
+mtlo $9
+msub $7,$8
+mfhi $10
+mflo $11
+addi $12,$0,0xFFFF
+addi $13,$0,0xFFD5
+
+addi $14,$0,0x0000
+mtlo $14
+msub $1,$14
+mfhi $15
+mflo $16
+addi $17,$0,0x0000
+addi $18,$0,0x0000
+
+lui $19,0xFFFF
+ori $19,$19,0xFFFF
+mtlo $19
+msub $19,$1
+mfhi $20
+mflo $21
+addi $22,$0,0x0000
+addi $23,$0,0x0003
+
+addi $24,$0,0x1234
+addi $25,$0,0x5678
+lui $26,0xFFFF
+ori $26,$26,0xFFFF
+mtlo $26
+msub $24,$25
+mfhi $27
+mflo $28
+
+halt
